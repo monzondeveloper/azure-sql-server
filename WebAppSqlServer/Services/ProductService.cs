@@ -3,12 +3,14 @@ using WebAppSqlServer.Models;
 
 namespace WebAppSqlServer.Services
 {
-    public class ProductService
+    public class ProductService : IProductService
     {
-        private static string dbServer = "appserver5000.database.windows.net";
-        private static string dbUser = "mmonzon";
-        private static string dbPassword = "Azure@123";
-        private static string dbName = "appdb";
+        private readonly IConfiguration _configuration;
+
+        public ProductService(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
 
         public List<Product> GetProducts()
         {
@@ -24,7 +26,7 @@ namespace WebAppSqlServer.Services
 
             using (SqlDataReader reader = cmd.ExecuteReader())
             {
-                while (reader.Read()) 
+                while (reader.Read())
                 {
                     Product product = new Product
                     {
@@ -45,13 +47,7 @@ namespace WebAppSqlServer.Services
 
         private SqlConnection GetConnection()
         {
-            var builder = new SqlConnectionStringBuilder();
-            builder.DataSource = dbServer;
-            builder.UserID = dbUser;
-            builder.Password = dbPassword;
-            builder.InitialCatalog = dbName;
-
-            return new SqlConnection(builder.ConnectionString);
+            return new SqlConnection(_configuration.GetConnectionString("SQLConnection"));
         }
     }
 }
