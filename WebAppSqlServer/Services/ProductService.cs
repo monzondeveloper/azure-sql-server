@@ -10,8 +10,6 @@ namespace WebAppSqlServer.Services
         private static string dbPassword = "Azure@123";
         private static string dbName = "appdb";
 
-     
-
         public List<Product> GetProducts()
         {
             SqlConnection conn = GetConnection();
